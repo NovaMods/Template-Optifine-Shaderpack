@@ -8,21 +8,21 @@ This shaderpack implements a few key Minecraft shader programs: `gbuffers_textur
 
 - shadow
 - gbuffers_basic
--- gbuffers_skybasic
--- gbuffers_textured
---- gbuffers_skytextured
---- gbuffers_clouds
---- gbuffers_beaconbeam
---- gbuffers_armor_glint
---- gbuffers_spidereyes
---- gbuffers_textured_lit
----- gbuffers_entities
----- gbuffers_hand
----- gbuffers_water
----- gbuffers_terrain
------ gbuffers_damagedblock
------ gbuffers_water
------ gbuffers_hand_water
+  - gbuffers_skybasic
+  - gbuffers_textured
+    - gbuffers_skytextured
+    - gbuffers_clouds
+    - gbuffers_beaconbeam
+    - gbuffers_armor_glint
+    - gbuffers_spidereyes
+    - gbuffers_textured_lit
+      - gbuffers_entities
+      - gbuffers_hand
+      - gbuffers_water
+      - gbuffers_terrain
+        - gbuffers_damagedblock
+        - gbuffers_water
+        - gbuffers_hand_water
 
 
 Optifine defines a hierarchy of shaders with each one rendering more specific kinds of geometry. If your shaderpack doesn't have a shader from the bottom of the hierarchy, Optifine with attempt to load that shader's fallback. Foe example, if your shaderpack doesn't have `gbuffers_hand`, Optifine will try to load `gbuffers_textured_lit`. If that shader is also missing, Optifine will then try `gbuffers_textured`, then `gbuffers_basic`
