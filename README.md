@@ -6,21 +6,25 @@ This is an example shaderpack I made which implements vanilla Minecraft lighting
 
 ### Optifine's Rendering Pipeline
 
-Optifine implements a deferred lighting pipeline
+Optifine dives shaderpack developers some flexibility in how they light the scene. You can use pure forward lighting, pure defrerred lighting, or a hybrid approach with deferred lighting for opaque geometrey and forward lighting for transparent geometry. This shaderpack uses the third option
 
-In a deferred lighting pipeline, when you draw your objects to the screen you don't calculate lighting for them. Instead, you write their material parameters to one or more rendertargets. The rendertargets which hold material parameters are collectively called a _geometry buffer_, or "gbuffer" for short
-
-Optifine does not implement a pure deferred lighting pipeline, however - or at least, shaderpack developers aren't required to use a pure deferred lighting pipeline. Optifine allows you to chose between pure deferred lighting and a mix of deferred and forward where opaque objects use deferred lighting and transparent objects use forward lighting. We'll first talk about the pure deferred pipeline, then work through the hybrid pipeline
+We can think of the rendering pipeline in terms of passes. Each pass performs a specific task, and each pass can read from and write to different resources. Here's the passes we'll be using:
 
 #### Shadow pass
 
 The first pass in either lighting pipeline is the shadow pass. In the shadow pass, Optifine renders a shadowmap from the perspective of the main light in the sky. This is the sun during the day and the moon during the night. The shadow pass uses the shader `shadow` for all geometry. It can write to up to two color rendertargets
 
-The shadow pass produces a two shadow maps: one from before transparents Optifine renders transparent objects, and one from after. THis allows you to do things like refraction or cloudy water
+The shadow pass produces a two shadow maps: one from before transparents Optifine renders transparent objects, and one from after. This allows you to do things like refraction or cloudy water
 
 #### GBuffer pass
 
-Next, Optifine renders all the geometry drawn by shaders whose names begin with `gbuffers_`. 
+A deferred lighting pipeline doesn't calculate lighting when an object is drawn. Instead, it writes the object's material's parameters to a set of rendertargets called a _geometry buffer_, or "gbuffer" for short. Your gbuffer can have up to seven rendertargets of any format you choose, but this shaderpack only uses three rendertargets
+
+In the gbuffer pass, Optifine renders all opaque geometry. It does this by using the shaders whose names begin with `gbuffers_`, except for `gbuffers_water` and `gbuffers_hand_water`. Shaders in the gbuffer pass can read from the shadowmapa or the shadow color rendertargets, and they can write to the gbuffer. If we were implementing forward lighting we'd read from those shadowmaps and possibly the shadow color images, but we'll save that for later
+
+#### Deferred lighting pass
+
+The deferred lighting pass is where we calculate lighting for opaque geometry
 
 ### Fallback hierarchy
 
@@ -49,7 +53,7 @@ Optifine defines a hierarchy of shaders with each one rendering more specific ki
 
 This hierarchy of shader fallbacks allows you to implement a specific shader for specific kinds of geometry, while also letting you implement a couple of "base" shaders that will render 90% of what you need. You can implement `gbuffers_textured_lit` and `gbuffers_water`, which would allow you to do one thing for most geometry in Minecraft while doing something different for the water, such as water waves
 
-_Gererally speaking_, the names of the shaders correspond
+_Generally speaking_, the names of the shaders correspond
 
 ### gbuffers_textured
 gbuffers_textured renders all geometry that has a texture, but doesn't receive block or sky light. Additionally, this shader is a fallback for `gbuffers_textured_lit`, `gbuffers_skytextured`, `gbuffers_clouds`, `gbuffers_armorglint`, `gbuffers_beaconbeam`, and `gbuffers_spidereyes`. Optifine will, at a bare minimum, use `gbuffers_textured` for particles. Because of the exact shaders present in this shaderpack, Optifine will use `gbuffers_textured` for particles, the sun and moon, clouds, armor glint, beacon beams, and spider eyes
