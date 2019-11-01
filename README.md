@@ -28,7 +28,7 @@ The deferred lighting pass is where we calculate lighting for opaque geometry
 
 ### Fallback hierarchy
 
-Optifine allows you to override many different shaders, but it doesn't require you to override every single one. In order to do that, Optifine defines a fallback for many of the optional shaders, so that they geometry that would have used a missing shader instead uses that shader's fallbck (or the fallback's fallback, if the fallback is also missing). 
+Optifine allows you to override many different shaders, but it doesn't require you to override every single one. In order to do that, Op~tifine defines a fallback for many of the optional shaders, so that they geometry that would have used a missing shader instead uses that shader's fallbck (or the fallback's fallback, if the fallback is also missing). 
 
 - gbuffers_basic
   - gbuffers_skybasic
