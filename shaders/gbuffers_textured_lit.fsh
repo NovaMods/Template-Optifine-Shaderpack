@@ -17,25 +17,14 @@ in vec2 light_levels_vs;
 uniform sampler2D texture;
 
 // A look-up-table (LUT) from block and sky light strength to light color
-//
-// When Minecraft sends block and sky light levels to the GPU, it's only sending their intensities. It does this 
-// instead of sending the full light color because the full light color is three times as much data. 
 uniform sampler2D lightmap;
 
 /*
  * Fragment shader outputs
  */
 
-// Output to the rendertarget bound to location 0
-//
-// Fragment shaders can output to special textures called rendertargets. Optifine will automaticlaly create all the
-// rendertargets that your shaderpack needs to use
-//
-// This shaderpack uses rendertarget 0 as the output for the color of the geometry
 layout(location = 0) out vec4 color_fs;
 layout(location = 1) out vec3 normal_fs;
-
-// 
 layout(location = 2) out vec4 light_color_fs;
 
 /*
